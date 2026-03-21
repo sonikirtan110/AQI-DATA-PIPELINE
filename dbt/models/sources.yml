@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: "{{ target.database }}"
+    schema: bronze
+    description: "Bronze layer - raw data from OGD India API and OpenAQ API via S3"
+    tables:
+      - name: AQI_MEASUREMENTS
+        description: "Raw AQI measurements loaded from OGD India API via S3"
+        columns:
+          - name: RAW_DATA
+            description: "Semi-structured variant column containing all raw fields"
+            tests:
+              - not_null
+          - name: FILE_NAME
+            description: "S3 filename for traceability"
+            tests:
+              - not_null
+          - name: LOAD_TIMESTAMP
+            description: "Timestamp when record was loaded to Snowflake"
+            tests:
+              - not_null

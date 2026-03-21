@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: silver_aqi_measurements
+    description: Cleaned AQI records parsed from bronze JSON payload.
+    columns:
+      - name: measurement_id
+        tests:
+          - not_null
+      - name: city
+        tests:
+          - not_null
+      - name: pollutant
+        tests:
+          - not_null

@@ -1,0 +1,2 @@
+-- Skeleton SQL for Snowflake schema setup
+-- TODO: add CREATE DATABASE/SCHEMA statements

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Run ruff
+        run: uv run ruff check include dags tests
+
+      - name: Run pytest
+        run: uv run pytest tests -v
+
+  dbt-parse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Prepare dbt profile for parse
+        working-directory: dbt
+        run: cp profiles.yml.example profiles.yml
+
+      - name: dbt parse
+        working-directory: dbt
+        env:
+          SNOWFLAKE_ACCOUNT: ci-placeholder-account
+          SNOWFLAKE_USER: ci-placeholder-user
+          SNOWFLAKE_PASSWORD: ci-placeholder-password
+          SNOWFLAKE_ROLE: ci-placeholder-role
+          SNOWFLAKE_DATABASE: ci-placeholder-database
+          SNOWFLAKE_WAREHOUSE: ci-placeholder-warehouse
+        run: uv run dbt parse --profiles-dir .

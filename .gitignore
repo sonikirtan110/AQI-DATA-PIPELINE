@@ -1,0 +1,48 @@
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Python & Virtual Environments
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.Python
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific
+.python-version
+.astro/
+.dbt/
+dbt/target/
+dbt/logs/
+dbt/seeds/
+dbt/dbt_packages/
+dbt/profiles.yml
+
+# Airflow
+airflow/logs/
+airflow/dags/__pycache__/
+airflow/.airflowignore
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+logs/
+*.log

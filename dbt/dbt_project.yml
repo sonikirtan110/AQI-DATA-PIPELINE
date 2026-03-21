@@ -1,0 +1,31 @@
+name: 'aqi_dbt'
+version: '1.0.0'
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+config-version: 2
+
+profile: 'aqi_dbt'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+models:
+  aqi_dbt:
+    # Silver Layer — incremental processing (only new records)
+    silver:
+      +materialized: incremental
+      +unique_key: measurement_id
+      +on_schema_change: sync_all_columns
+      +schema: silver
+      
+    # Gold Layer — aggregated business tables
+    gold:
+      +materialized: table
+      +schema: gold
