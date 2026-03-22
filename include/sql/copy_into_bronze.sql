@@ -4,13 +4,14 @@
 
 USE SCHEMA aqi_db.bronze;
 
--- Load raw JSON from S3 into VARIANT column
+-- Load one row per AQI reading from payload.records[] into VARIANT column
 COPY INTO aqi_db.bronze.AQI_MEASUREMENTS (RAW_DATA, FILE_NAME)
 FROM (
   SELECT
-    $1 AS RAW_DATA,
+    record.value AS RAW_DATA,
     METADATA$FILENAME AS FILE_NAME
-  FROM @aqi_db.bronze.s3_aqi_stage
+  FROM @aqi_db.bronze.s3_aqi_stage,
+       LATERAL FLATTEN(INPUT => $1:records) AS record
 )
 FILE_FORMAT = (TYPE = 'JSON')
 ON_ERROR = 'CONTINUE'
