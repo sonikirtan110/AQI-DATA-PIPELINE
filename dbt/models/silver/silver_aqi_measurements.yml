@@ -13,3 +13,6 @@ models:
       - name: pollutant
         tests:
           - not_null
+      - name: measured_at
+        tests:
+          - not_null

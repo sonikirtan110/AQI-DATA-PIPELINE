@@ -7,7 +7,10 @@
 WITH source AS (
     SELECT * FROM {{ source('bronze', 'AQI_MEASUREMENTS') }}
     {% if is_incremental() %}
-    WHERE LOAD_TIMESTAMP > (SELECT MAX(LOAD_TIMESTAMP) FROM {{ this }})
+    WHERE LOAD_TIMESTAMP > (
+        SELECT COALESCE(MAX(LOAD_TIMESTAMP), TO_TIMESTAMP_NTZ('1900-01-01'))
+        FROM {{ this }}
+    )
     {% endif %}
 ),
 
@@ -24,15 +27,18 @@ cleaned AS (
         TRIM(UPPER(COALESCE(RAW_DATA:state::VARCHAR, 'UNKNOWN'))) AS state,
         RAW_DATA:station::VARCHAR AS station_id,
         RAW_DATA:station::VARCHAR AS station_name,
-        TRIM(UPPER(RAW_DATA:pollutant_id::VARCHAR)) AS pollutant,
-        CAST(RAW_DATA:pollutant_avg::FLOAT AS FLOAT) AS value,
-        TO_TIMESTAMP_NTZ(RAW_DATA:last_update::VARCHAR) AS measured_at,
-        RAW_DATA:latitude::FLOAT AS latitude,
-        RAW_DATA:longitude::FLOAT AS longitude,
+                TRIM(UPPER(COALESCE(RAW_DATA:pollutant_id::VARCHAR, RAW_DATA:pollutant::VARCHAR))) AS pollutant,
+                TRY_TO_DOUBLE(RAW_DATA:pollutant_avg::VARCHAR) AS value,
+                COALESCE(
+                    TRY_TO_TIMESTAMP_NTZ(RAW_DATA:last_update::VARCHAR, 'DD-MM-YYYY HH24:MI:SS'),
+                    TRY_TO_TIMESTAMP_NTZ(RAW_DATA:last_update::VARCHAR)
+                ) AS measured_at,
+                TRY_TO_DOUBLE(RAW_DATA:latitude::VARCHAR) AS latitude,
+                TRY_TO_DOUBLE(RAW_DATA:longitude::VARCHAR) AS longitude,
         LOAD_TIMESTAMP
     FROM source
-    WHERE RAW_DATA:pollutant_avg::FLOAT IS NOT NULL
-      AND RAW_DATA:pollutant_avg::FLOAT >= 0
+        WHERE TRY_TO_DOUBLE(RAW_DATA:pollutant_avg::VARCHAR) IS NOT NULL
+            AND TRY_TO_DOUBLE(RAW_DATA:pollutant_avg::VARCHAR) >= 0
       AND RAW_DATA:last_update::VARCHAR IS NOT NULL
 ),
 
