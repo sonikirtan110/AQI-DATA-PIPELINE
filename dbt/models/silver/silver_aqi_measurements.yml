@@ -13,3 +13,12 @@ models:
       - name: pollutant
         tests:
           - not_null
+      - name: measured_at
+        tests:
+          - not_null
+      - name: sub_index
+        description: Pollutant-level AQI sub-index using CPCB breakpoint formulas.
+        tests:
+          - not_null:
+              config:
+                where: "pollutant in ('PM2.5', 'PM10', 'NO2', 'SO2', 'CO', 'OZONE', 'NH3')"

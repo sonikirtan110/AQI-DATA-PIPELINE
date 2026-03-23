@@ -4,15 +4,17 @@
 
 USE SCHEMA aqi_db.bronze;
 
--- Load raw JSON from S3 into VARIANT column
+-- Load one row per AQI reading from payload.records[] into VARIANT column.
+-- Stage aliasing avoids identifier issues with FLATTEN in COPY SELECT transforms.
 COPY INTO aqi_db.bronze.AQI_MEASUREMENTS (RAW_DATA, FILE_NAME)
 FROM (
   SELECT
-    $1 AS RAW_DATA,
-    METADATA$FILENAME AS FILE_NAME
+    rec.value AS RAW_DATA,
+    src.METADATA$FILENAME AS FILE_NAME
   FROM @aqi_db.bronze.s3_aqi_stage
+    (FILE_FORMAT => aqi_db.bronze.jsonl_format) AS src,
+    LATERAL FLATTEN(INPUT => src.$1:records) AS rec
 )
-FILE_FORMAT = (TYPE = 'JSON')
 ON_ERROR = 'CONTINUE'
 PURGE = FALSE;
 

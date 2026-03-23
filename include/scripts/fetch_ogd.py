@@ -142,7 +142,11 @@ def run_ingestion(
     return s3_key, len(records)
 
 
-def fetch_and_upload_ogd(limit: int | None = None, offset: int | None = None) -> dict[str, Any]:
+def fetch_and_upload_ogd(
+    limit: int | None = None,
+    offset: int | None = None,
+    paginate: bool = False,
+) -> dict[str, Any]:
     """Compatibility wrapper for DAG/tests expecting a dict payload."""
     effective_limit = limit if limit is not None else 100
     effective_offset = offset if offset is not None else 0
@@ -150,7 +154,7 @@ def fetch_and_upload_ogd(limit: int | None = None, offset: int | None = None) ->
     s3_key, record_count = run_ingestion(
         limit=effective_limit,
         offset=effective_offset,
-        paginate=False,
+        paginate=paginate,
     )
     return {
         "status": "success",
