@@ -37,7 +37,7 @@ This repository contains an end-to-end **ELT pipeline** that:
 
 ### Architecture
 
-![Architecture](images/SnowflakeSchema.png)
+![Architecture](images/architecture.png)
 
 ### Infrastructure Components
 
@@ -72,25 +72,25 @@ Complete schema with Bronze/Silver/Gold layers and data lineage tracking.
 | **Silver** | Cleaned, deduplicated, enhanced | Snowflake | Real-time |
 | **Gold** | Business aggregates, KPIs, metrics | Snowflake | Daily |
 
-### Silver Layer Result 1
+### silver_aqi_measurements (Result 1)
 
-_Pending: add a distinct screenshot at `images/silver1.png`._
+![Silver Layer Result 1](images/silver1.png)
 
-### Silver Layer Result 2
+### silver_aqi_measurements (Result 2)
 
-_Pending: add a distinct screenshot at `images/silver2.png`._
+![Silver Layer Result 2](images/silver2.png)
 
-### Gold Ranking
+### gold_aqi_rankings
 
-_Pending: add a distinct screenshot at `images/gold_ranking.png`._
+![Gold Ranking](images/gold_ranking.png)
 
-### Gold Daily
+### gold_city_aqi_daily
 
-_Pending: add a distinct screenshot at `images/gold_daily.png`._
+![Gold Daily](images/gold_daily.png)
 
-### Gold Health Alerts
+### gold_health_alerts
 
-_Pending: add a distinct screenshot at `images/gold_health.png`._
+![Gold Health Alerts](images/gold_health.png)
 
 ---
 
