@@ -10,5 +10,14 @@ SELECT
     dominant_category,
     dbt_updated_at
 FROM {{ ref('gold_city_aqi_daily') }}
-WHERE dominant_category IN ('Unhealthy', 'Very Unhealthy', 'Hazardous')
+WHERE dominant_category IN (
+    'Poor',
+    'Very Poor',
+    'Severe',
+    'Severe+',
+    -- Backward-compatible labels from older model versions
+    'Unhealthy',
+    'Very Unhealthy',
+    'Hazardous'
+)
 ORDER BY measurement_date DESC, avg_value DESC

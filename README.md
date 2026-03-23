@@ -35,59 +35,9 @@ This repository contains an end-to-end **ELT pipeline** that:
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     DATA SOURCES                                │
-│  ┌──────────────────────┐         ┌──────────────────────┐    │
-│  │  OGD India API       │         │  OpenAQ API          │    │
-│  │  (Real-time AQI)     │         │  (Optional)          │    │
-│  └──────────────────────┘         └──────────────────────┘    │
-└───────────────┬──────────────────────────────────┬──────────────┘
-                │                                  │
-                ▼                                  ▼
-┌─────────────────────────────────────────────────────────────────┐
-│           AIRFLOW ORCHESTRATION (CeleryExecutor)                │
-│  ┌────────────────────────────────────────────────────────┐    │
-│  │  DAG: aqi_daily_pipeline      DAG: aqi_backfill_dag    │    │
-│  │  • fetch_ogd_api              • fetch_ogd_backfill      │    │
-│  │  • copy_into_bronze           • copy_into_bronze        │    │
-│  │  • dbt_run_silver             • dbt_run_silver          │    │
-│  │  • dbt_run_gold               • dbt_run_gold            │    │
-│  │  • dbt_test                   • dbt_test                │    │
-│  │  • log_completion             • log_completion          │    │
-│  └────────────────────────────────────────────────────────┘    │
-└───────────────┬──────────────────────────────────┬──────────────┘
-                │                                  │
-                ▼                                  ▼
-         ┌──────────────┐                  ┌──────────────┐
-         │  AWS S3      │                  │ PostgreSQL   │
-         │ (Data Lake)  │                  │ (Airflow DB) │
-         └──────────────┘                  └──────────────┘
-                │
-                ▼
-        ┌──────────────────────────────────┐
-        │      SNOWFLAKE WAREHOUSE         │
-        ├──────────────────────────────────┤
-        │ BRONZE Layer                     │
-        │  └─ AQI_MEASUREMENTS (raw JSON)  │
-        ├──────────────────────────────────┤
-        │ SILVER Layer (Transformed)       │
-        │  └─ silver_aqi_measurements      │
-        ├──────────────────────────────────┤
-        │ GOLD Layer (Analytics Ready)     │
-        │  ├─ gold_city_aqi_daily          │
-        │  ├─ gold_aqi_rankings            │
-        │  └─ gold_health_alerts           │
-        └──────────────────────────────────┘
-                │
-                ▼
-        ┌──────────────────────────────────┐
-        │    POWER BI DASHBOARDS           │
-        │  • City-level AQI trends         │
-        │  • Regional rankings             │
-        │  • Health alert notifications    │
-        └──────────────────────────────────┘
-```
+### Architecture
+
+![Architecture](images/SnowflakeSchema.png)
 
 ### Infrastructure Components
 
@@ -121,6 +71,26 @@ Complete schema with Bronze/Silver/Gold layers and data lineage tracking.
 | **Bronze** | Raw ingestion, minimal transformation | Snowflake | Real-time (~10min) |
 | **Silver** | Cleaned, deduplicated, enhanced | Snowflake | Real-time |
 | **Gold** | Business aggregates, KPIs, metrics | Snowflake | Daily |
+
+### Silver Layer Result 1
+
+_Pending: add a distinct screenshot at `images/silver1.png`._
+
+### Silver Layer Result 2
+
+_Pending: add a distinct screenshot at `images/silver2.png`._
+
+### Gold Ranking
+
+_Pending: add a distinct screenshot at `images/gold_ranking.png`._
+
+### Gold Daily
+
+_Pending: add a distinct screenshot at `images/gold_daily.png`._
+
+### Gold Health Alerts
+
+_Pending: add a distinct screenshot at `images/gold_health.png`._
 
 ---
 
