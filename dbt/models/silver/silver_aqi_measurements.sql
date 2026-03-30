@@ -5,7 +5,7 @@
 ) }}
 
 WITH source AS (
-    SELECT * FROM {{ source('bronze', 'AQI_MEASUREMENTS') }}
+    SELECT * FROM {{ ref('bronze_aqi_measurements') }}
     {% if is_incremental() %}
     WHERE LOAD_TIMESTAMP > (
         SELECT COALESCE(MAX(LOAD_TIMESTAMP), TO_TIMESTAMP_NTZ('1900-01-01'))
