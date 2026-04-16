@@ -251,6 +251,14 @@ Interactive dashboards for real-time AQI analytics and monitoring:
 - **Health Alerts**: Anomalies and thresholds violations triggering health recommendations
 - **Historical Trends**: Year-over-year comparisons and seasonal patterns
 
+### Dashboard Preview: Index
+
+![Power BI Index Dashboard](images/index.jpg)
+
+### Dashboard Preview: AQI
+
+![Power BI AQI Dashboard](images/aqi.jpg)
+
 **To Connect Power BI**:
 1. Open Power BI Desktop
 2. Get Data → Snowflake Database
