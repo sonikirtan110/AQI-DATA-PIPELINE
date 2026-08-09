@@ -167,7 +167,7 @@ aqi_pipeline/
 
 ```bash
 # Clone repository
-git clone https://github.com/kirtan-soni/AQI-DATA-PIPELINE.git
+git clone https://github.com/sonikirtan110/AQI-DATA-PIPELINE.git
 cd AQI-DATA-PIPELINE
 
 # Copy environment template
